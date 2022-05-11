@@ -313,6 +313,9 @@ int InitializeI2C(int chan, unsigned char gpio) {
 		printf("ftdi init failed\n");
 		return 0;
 	}
+	i = (chan == 0) ? INTERFACE_A : INTERFACE_B;
+	ftdi_set_interface(&ftdic, i);
+
 	ftStatus = ftdi_usb_open(&ftdic, 0x0403, FTDI_DEV_ADDR);
 	if(ftStatus < 0) {
 		printf("Error opening usb device: %s\n", ftdi_get_error_string(&ftdic));
@@ -403,7 +406,7 @@ int main(int argc, char *argv[]) {
 	if(argc < 2) {
 		printf("i2cget: get data from i2c bus using ftdi FT4232H/FT2232H I2C\n");
 		printf("Written by: Ori Idan Helicon technologies ltd. (ori@helicontech.co.il)\n\n");
-		printf("usage: i2cget [-c <chan>] [-g <gpio state>] [-n <readBytes>] <adress> [<EEPROM/CMD>]\n");
+		printf("usage: i2cget [-c <channel#>] [-g <gpio state>] [-n <readBytes>] <adress> [<EEPROM/CMD>]\n");
 		return 1;
 	}
 	for(a = 1; a < argc; a++) {
